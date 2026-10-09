@@ -99,7 +99,7 @@ export function SummaryWidget({
           {formatCurrency(total, displayCurrency)}
         </p>
         <p className="text-xs text-muted-foreground mt-1">
-          這段期間共 {billedCount} 項訂閱有扣款
+          {billedCount > 0 ? `這段期間共 ${billedCount} 項訂閱有扣款` : '這段期間沒有訂閱扣款'}
         </p>
       </div>
     </div>
