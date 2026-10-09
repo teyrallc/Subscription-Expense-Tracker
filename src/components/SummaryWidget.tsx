@@ -25,16 +25,18 @@ export function SummaryWidget({
   onCustomEndChange
 }: SummaryWidgetProps) {
 
-  const total = useMemo(() => {
+  const { total, billedCount } = useMemo(() => {
     const { start, end } = getPeriodDates(period, customStart, customEnd);
 
     let sum = 0;
+    let count = 0;
     subscriptions.forEach(sub => {
       const dates = generateBillingDates(sub, start, end);
+      if (dates.length > 0) count += 1;
       const subTotal = dates.length * sub.amount;
       sum += convertCurrency(subTotal, sub.currency || 'USD', displayCurrency);
     });
-    return sum;
+    return { total: sum, billedCount: count };
   }, [period, subscriptions, displayCurrency, customStart, customEnd]);
 
   const periods: { value: SummaryPeriod; label: string }[] = [
@@ -95,6 +97,9 @@ export function SummaryWidget({
         <p className="text-sm text-muted-foreground mb-1 font-medium">總計金額 ({displayCurrency})</p>
         <p className="text-3xl font-bold text-foreground tracking-tight">
           {formatCurrency(total, displayCurrency)}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          這段期間共 {billedCount} 項訂閱有扣款
         </p>
       </div>
     </div>
